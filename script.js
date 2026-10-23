@@ -133,7 +133,10 @@ function update() {
     player.attacking = true;
     player.frame = 0;
     attackTimer = 0;
-    slashSound.play()
+    const sound = slashSound.cloneNode();
+    sound.preservesPitch = false;
+    sound.playbackRate = 0.9 + Math.random() * 0.2;
+    sound.play();
 
 
 
