@@ -16,9 +16,9 @@ const reaper = "Assets/Undead executioner puppet/png/";
 const idleSheet = loadImage(reaper + "idle2.png");
 const attackSheet = loadImage(reaper + "attacking.png");
 const deathSheet = loadImage(reaper + "death.png");
+const potionImg = loadImage("Assets/potion.png");
 
 const slashSound = new Audio("Assets/slash.mp3");
-
 
 
 const halloween = "Assets/Halloween Characters/";
@@ -49,6 +49,9 @@ for (let i = 0; i < 300; i++) {
   });
 }
 
+
+
+
 const player = {
   x: canvas.width / 2,
   y: canvas.height / 2,
@@ -68,6 +71,7 @@ let attackTimer = 0;
 let hurtTimer = 0;
 let dead = false;
 let deathFrame = 0;
+let potions = [];
 
 window.addEventListener("keydown", (e) => {
   keys[e.key.toLowerCase()] = true;
@@ -119,6 +123,16 @@ function update() {
   if (spawnTimer > spawnRate) {
     spawnEnemy();
     spawnTimer = 0;
+  }
+
+  for (let i = potions.length - 1; i >= 0; i--) {
+    const p = potions[i];
+    const dist = Math.hypot(p.x - player.x, p.y - player.y);
+
+    if (dist < 45) {
+      player.hp = Math.min(100, player.hp + p.healAmount);
+      potions.splice(i, 1);
+    }
   }
 
   let enemyNearby = false;
@@ -180,6 +194,18 @@ function update() {
 
     if (enemy.hitTimer > 0) enemy.hitTimer--;
     if (tick % 10 == 0) enemy.frame = (enemy.frame + 1) % 4;
+  }
+
+  for (let enemy of enemies) {
+    if (enemy.hp <= 0) {
+      if (Math.random() < 0.9) {
+        potions.push({
+          x: enemy.x,
+          y: enemy.y,
+          healAmount: 25
+        });
+      }
+    }
   }
 
   const before = enemies.length;
@@ -281,6 +307,19 @@ function draw() {
   for (let enemy of enemies) {
     if (enemy.y < player.y) drawEnemy(enemy);
   }
+
+  for (let p of potions) {
+    const bob = Math.sin(tick * 0.1) * 3; // ANimzations for potion
+
+    ctx.fillStyle = "rgba(0,0,0,0.3)"
+    ctx.beginPath();
+    ctx.ellipse(p.x, p.y + 10, 8, 3, 0, 0, Math.PI * 2);
+    ctx.fill()
+
+    const size = 48;
+    ctx.drawImage(potionImg, p.x - size / 2, p.y - size / 2 + bob, size, size);
+  }
+
 
   drawPlayer();
   for (let enemy of enemies) {
