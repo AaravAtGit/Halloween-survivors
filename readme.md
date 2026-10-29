@@ -50,6 +50,13 @@ Please feel free to contibute to the game it would be really appreciated, the ga
 
     You can double click on the index.html file to launch the game, Although a live server would be preferable, you can run one by using `python -m http.server` or `npx serve .` alternatively you can use the live server extention in vsc marketplace.   
 
+### Asset credits
+The assets I've used were picked from itch.io. Below are the links to the itch.io page of the assets I used. 
+
+- Player sprite - [undead-executioner by DarkPixel](https://darkpixel-kronovi.itch.io/undead-executioner)
+- Enemy sprites - [2D animated halloween characters by ismartyl](https://ismartal.itch.io/2d-animated-halloween-characters)
+- Health potion - [Hearth shaped potion by lorenet](https://lornent.itch.io/heart-shaped-potion-bottle)
+
 
 ---
 
