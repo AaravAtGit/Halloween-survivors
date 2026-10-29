@@ -124,7 +124,7 @@ function update() {
     spawnEnemy();
     spawnTimer = 0;
   }
-
+3
   for (let i = potions.length - 1; i >= 0; i--) {
     const p = potions[i];
     const dist = Math.hypot(p.x - player.x, p.y - player.y);
@@ -198,7 +198,7 @@ function update() {
 
   for (let enemy of enemies) {
     if (enemy.hp <= 0) {
-      if (Math.random() < 0.9) {
+      if (Math.random() < 0.2) {
         potions.push({
           x: enemy.x,
           y: enemy.y,

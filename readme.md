@@ -1,21 +1,58 @@
-# Halloween survivers
+# Halloween Survivors
 
-A dark themed vampire survivors like game made for halloween. 
+<p align="center">
+  <img src="demo.png" />
+</p>
 
-## Tech stack
-
-- HTML 
-- CSS 
-- Javascript
-
-_(will move to astro later)_
+<p align="center">
+  A vamipre survivors like bullet heaven game built on the theme of All Hallows' Eve.
+</p>
 
 
-## How does the game work 
+## Story
 
-You move around your main character by moving WASD which is death trying to collect lost souls who escaped during the season of halloween. 
-The character(death) auto attacks when enemies are near, the entire map is dark other than a small light emmiting near from our player character to enchance on the dark theme. 
+The development of this game first started at boba bash delhi, an event organized by hackclub. It was an awesome event and met amazing people, this project is also part of the 3am YSWS over at hackclub where we have to ship a dark themed project. 
+
+## Gameplay
+
+You play as death, the spirits of All hallows' eve have gone rouge, your object is to slice them with your sythe and send them back to the realm of the dead, over time the spirits would enlarge in numbers and also drop potions, creating a fun and adicting bullet heaven experience. 
 
 
---- 
-Made with 🩷 by [AaravAtGit](https://github.com/AaravAtGit/)
+## 🎮 Controls
+The game has the same controls as any other game
+| Key | Action |
+| :--- | :--- |
+| W / ↑ | Move Up |
+| A / ← | Move Left |
+| S / ↓ | Move Down |
+| D / → | Move Right |
+| R | Restart immediately upon death |
+
+*Attacks are automatic as soon as you get close to an enemy*
+
+
+
+## Features
+The game as of now supports multiple sprites across with different enemies, I've also recently added potions that drop after a enemy is slain, which heals your health and helps you keep going. For the future of the game the plan is to add more weapons so the game becomes more engaging and always have a suprise/fun factor. Also need to make different types of enemies(for eg: long range attackers.) Will be implemented soon™ 🤞
+
+
+## Contribute
+
+Please feel free to contibute to the game it would be really appreciated, the game runs on the HTML canvas with `script.js` having most of the logic. below are the steps to run it locally. 
+
+
+### Run locally
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/AaravAtGit/Halloween-survivors.git
+   cd Halloween-survivors
+   ```
+
+    You can double click on the index.html file to launch the game, Although a live server would be preferable, you can run one by using `python -m http.server` or `npx serve .` alternatively you can use the live server extention in vsc marketplace.   
+
+
+---
+
+<p align="center">
+  Made with 🧡 by <a href="https://github.com/AaravAtGit">AaravAtGit</a>
+</p>
