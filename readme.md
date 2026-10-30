@@ -1,65 +1,104 @@
 # Halloween Survivors
 
-<p align="center">
-  <img src="demo.png" />
-</p>
+A small browser survival game with a Halloween cast. You play as the reaper, move through a dark arena, cut down whatever gets close, and pick up potions to keep the run going.
 
-<p align="center">
-  A vamipre survivors like bullet heaven game built on the theme of All Hallows' Eve.
-</p>
+![Halloween Survivors gameplay](screenshots/gameplay.png)
 
+## About the game
 
-## Story
+The idea is simple. Enemies keep coming from every direction, the screen gets darker outside your small circle of light, and your health bar is the only thing between you and the death screen. The scythe swings on its own when something enters range, so most of the game is about positioning and deciding when to move toward a potion.
 
-The development of this game first started at boba bash delhi, an event organized by hackclub. It was an awesome event and met amazing people, this project is also part of the 3am YSWS over at hackclub where we have to ship a dark themed project. 
+There is no menu or upgrade screen. You start in the arena, the timer starts at zero, and the spawn rhythm gets tighter the longer you survive. The HUD shows health, kills, and time. When health reaches zero, the run ends and you can restart with R.
 
-## Gameplay
+## Controls
 
-You play as death, the spirits of All hallows' eve have gone rouge, your object is to slice them with your sythe and send them back to the realm of the dead, over time the spirits would enlarge in numbers and also drop potions, creating a fun and adicting bullet heaven experience. 
+| Action | Keys |
+| --- | --- |
+| Move | W A S D or arrow keys |
+| Restart after death | R |
 
+The game is built for a keyboard and a desktop browser. There are no touch controls yet.
 
-## 🎮 Controls
-The game has the same controls as any other game
-| Key | Action |
-| :--- | :--- |
-| W / ↑ | Move Up |
-| A / ← | Move Left |
-| S / ↓ | Move Down |
-| D / → | Move Right |
-| R | Restart immediately upon death |
+## Enemies
 
-*Attacks are automatic as soon as you get close to an enemy*
+![The six enemy sprites](screenshots/enemies.png)
 
+| Enemy | Health | Speed | Notes |
+| --- | --- | --- | --- |
+| Bat | 1 | 1.6 | The fastest enemy, but a single hit is enough |
+| Werewolf | 2 | 1.2 | Quick and takes two hits |
+| Vampire | 2 | 1.1 | Balanced speed and health |
+| Witch | 3 | 1.0 | Slower, but survives three hits |
+| Ghost | 2 | 0.9 | Drifts in slowly |
+| Jack o lantern | 3 | 0.7 | The slowest and toughest of the group |
 
+Every enemy drops a potion about nine times out of ten. Potions restore 25 health and disappear when you walk over them.
 
-## Features
-The game as of now supports multiple sprites across with different enemies, I've also recently added potions that drop after a enemy is slain, which heals your health and helps you keep going. For the future of the game the plan is to add more weapons so the game becomes more engaging and always have a suprise/fun factor. Also need to make different types of enemies(for eg: long range attackers.) Will be implemented soon™ 🤞
+## The reaper
 
+| The reaper | Healing potion |
+| --- | --- |
+| ![Reaper idle frame](screenshots/reaper.png) | ![Healing potion](screenshots/potion.png) |
 
-## Contribute
+You start with 100 health. The reaper attacks automatically when an enemy gets within 110 pixels, and the swing hits every enemy in that range. The character has idle, attack, and death animations, all taken from sprite sheets in the Assets folder.
 
-Please feel free to contibute to the game it would be really appreciated, the game runs on the HTML canvas with `script.js` having most of the logic. below are the steps to run it locally. 
+## Game over
 
+![Game over screen](screenshots/game-over.png)
 
-### Run locally
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/AaravAtGit/Halloween-survivors.git
-   cd Halloween-survivors
-   ```
+The final screen shows how long you survived and how many enemies you killed. Press R to reload the page and start a new run.
 
-    You can double click on the index.html file to launch the game, Although a live server would be preferable, you can run one by using `python -m http.server` or `npx serve .` alternatively you can use the live server extention in vsc marketplace.   
+## How to run locally
 
-### Asset credits
-The assets I've used were picked from itch.io. Below are the links to the itch.io page of the assets I used. 
+You need Python 3 or any other static file server. Clone the repository and start the server from the project folder:
 
-- Player sprite - [undead-executioner by DarkPixel](https://darkpixel-kronovi.itch.io/undead-executioner)
-- Enemy sprites - [2D animated halloween characters by ismartyl](https://ismartal.itch.io/2d-animated-halloween-characters)
-- Health potion - [Hearth shaped potion by lorenet](https://lornent.itch.io/heart-shaped-potion-bottle)
+```bash
+git clone https://github.com/Nitikpsn/Halloween-survivors.git
+cd Halloween-survivors
+python3 -m http.server 8000
+```
 
+Open [http://localhost:8000](http://localhost:8000) in your browser. Keep the terminal open while you play, then press Ctrl+C to stop the server.
 
----
+If you use VS Code, the Live Server extension works too. Opening `index.html` directly usually works, but a local server is more reliable for loading images and audio.
 
-<p align="center">
-  Made with 🧡 by <a href="https://github.com/AaravAtGit">AaravAtGit</a>
-</p>
+## Project layout
+
+| Path | What it contains |
+| --- | --- |
+| `index.html` | Page structure, HUD, and game over screen |
+| `style.css` | Layout, fonts, health bar, and the darkness overlay |
+| `script.js` | Player movement, enemy spawning, combat, pickups, and rendering |
+| `Assets/` | Reaper sprite sheets, enemy frames, GIF previews, potion art, and the slash sound |
+| `screenshots/` | Images used in this README |
+| `readme.md` | This file |
+
+## Built with
+
+| Part | Technology |
+| --- | --- |
+| Rendering | HTML5 Canvas 2D |
+| Game logic | Vanilla JavaScript |
+| Layout and effects | CSS, including the radial light overlay |
+| Audio | HTMLAudioElement |
+| Art | Aseprite sprite sheets and PNG animation frames |
+| Fonts | Creepster and Pixelify Sans from Google Fonts |
+
+There are no packages to install and no build step. A modern browser is enough.
+
+## How it works
+
+The game runs on a single canvas with a `requestAnimationFrame` loop. Player and enemy positions are plain numbers, and distance checks use `Math.hypot`. The darkness comes from a CSS radial gradient that follows the player, which sits above the canvas and below the HUD.
+
+The reaper art is loaded from sprite sheets with 100 by 100 frames. Enemy art is loaded as four separate PNG frames per character and cycled in the draw loop. Slash sounds are cloned before playback so quick attacks do not cut each other off.
+
+The game is split into three files with no build step: the page, the styles, and one script. That makes it easy to open, read, and change without a toolchain.
+
+## Adding another enemy
+
+Add an entry to the `enemyTypes` array in `script.js`, then place four frames in `Assets/Halloween Characters/<Folder>/Png_animation/`. The loader expects files named `<Name>1.png` through `<Name>4.png`, matching the `name` and `folder` values in the array.
+
+## Notes
+
+This is a prototype. There is one weapon, one arena, and no pause or upgrade system. The fun comes from the small scale: a short run, a growing crowd, and one more potion just out of reach.
+
