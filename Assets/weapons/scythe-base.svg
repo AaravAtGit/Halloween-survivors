@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="blade" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#5d646d"/>
+      <stop offset="0.5" stop-color="#aeb8c4"/>
+      <stop offset="1" stop-color="#eef4ff"/>
+    </linearGradient>
+    <linearGradient id="wood" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#4a3020"/>
+      <stop offset="1" stop-color="#8a5f3a"/>
+    </linearGradient>
+  </defs>
+  <path d="M15 57 L43 17" stroke="#24160d" stroke-width="8" stroke-linecap="round"/>
+  <path d="M15 57 L43 17" stroke="url(#wood)" stroke-width="5" stroke-linecap="round"/>
+  <path d="M18 53 L40 21" stroke="#b98550" stroke-width="1.4" stroke-linecap="round" opacity="0.6"/>
+  <path d="M41 15 C47 5 59 4 63 12 C55 13 49 20 47 30 C47 24 45 18 41 15 Z" fill="url(#blade)" stroke="#2b3038" stroke-width="1.2"/>
+  <path d="M43 17 C48 10 57 9 61 13" fill="none" stroke="#ffffff" stroke-width="1.1" opacity="0.8"/>
+  <circle cx="42" cy="18" r="3.2" fill="#3a2a1c" stroke="#b98550" stroke-width="1"/>
+</svg>

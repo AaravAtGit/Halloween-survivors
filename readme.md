@@ -8,7 +8,7 @@ A small browser survival game with a Halloween cast. You play as the reaper, mov
 
 The idea is simple. Enemies keep coming from every direction, the screen gets darker outside your small circle of light, and your health bar is the only thing between you and the death screen. The scythe swings on its own when something enters range, so most of the game is about positioning and deciding when to move toward a potion.
 
-There is no menu or upgrade screen. You start in the arena, the timer starts at zero, and the spawn rhythm gets tighter the longer you survive. The HUD shows health, kills, and time. When health reaches zero, the run ends and you can restart with R.
+There is no menu, but the scythe grows with you. You start in the arena, the timer starts at zero, and the spawn rhythm gets tighter the longer you survive. Every kill is worth 10 points, and each 100 points upgrades the weapon to the next tier. The HUD shows health, kills, points, and a progress bar toward the next scythe. When health reaches zero, the run ends and you can restart with R.
 
 ## Controls
 
@@ -40,13 +40,28 @@ Every enemy drops a potion about nine times out of ten. Potions restore 25 healt
 | --- | --- |
 | ![Reaper idle frame](screenshots/reaper.png) | ![Healing potion](screenshots/potion.png) |
 
-You start with 100 health. The reaper attacks automatically when an enemy gets within 110 pixels, and the swing hits every enemy in that range. The character has idle, attack, and death animations, all taken from sprite sheets in the Assets folder.
+You start with 100 health. The reaper attacks automatically when an enemy gets within its reach, and the swing hits every enemy in that range. The character has idle, attack, and death animations, all taken from sprite sheets in the Assets folder.
+
+## Weapon upgrades
+
+The scythe has three upgrade tiers. Kills award 10 points, so each upgrade arrives after 10 kills.
+
+| Points | Scythe | Damage | Reach | Attack cooldown |
+| --- | --- | --- | --- | --- |
+| 0 | Rusted Scythe | 1 | 110 | 55 |
+| 100 | Blood Scythe | 2 | 126 | 46 |
+| 200 | Soul Reaper | 3 | 142 | 38 |
+| 300 | Pumpkin King | 4 | 160 | 30 |
+
+Each upgrade changes the HUD icon, boosts damage, reach, and swing speed, and adds a matching slash trail and ground aura. An upgrade banner appears when a new tier unlocks. The scythe is capped at Pumpkin King, and the progress bar stays full once you reach it.
+
+The four weapon icons live in `Assets/weapons/` as SVG files: `scythe-base.svg`, `scythe-blood.svg`, `scythe-soul.svg`, and `scythe-pumpkin.svg`.
 
 ## Game over
 
 ![Game over screen](screenshots/game-over.png)
 
-The final screen shows how long you survived and how many enemies you killed. Press R to reload the page and start a new run.
+The final screen shows how long you survived, how many enemies you killed, and your final point total. Press R to reload the page and start a new run.
 
 ## How to run locally
 
@@ -69,7 +84,7 @@ If you use VS Code, the Live Server extension works too. Opening `index.html` di
 | `index.html` | Page structure, HUD, and game over screen |
 | `style.css` | Layout, fonts, health bar, and the darkness overlay |
 | `script.js` | Player movement, enemy spawning, combat, pickups, and rendering |
-| `Assets/` | Reaper sprite sheets, enemy frames, GIF previews, potion art, and the slash sound |
+| `Assets/` | Reaper sprite sheets, enemy frames, GIF previews, potion art, weapon icons, and the slash sound |
 | `screenshots/` | Images used in this README |
 | `readme.md` | This file |
 
@@ -100,5 +115,5 @@ Add an entry to the `enemyTypes` array in `script.js`, then place four frames in
 
 ## Notes
 
-This is a prototype. There is one weapon, one arena, and no pause or upgrade system. The fun comes from the small scale: a short run, a growing crowd, and one more potion just out of reach.
+This is a prototype. There is one arena and no pause or shop system. The weapon upgrade tiers are the progression hook: each 100 points makes the scythe stronger and the arena a little easier to survive. The fun comes from the small scale: a short run, a growing crowd, and one more potion just out of reach.
 
