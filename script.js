@@ -18,6 +18,59 @@ const attackSheet = loadImage(reaper + "attacking.png");
 const deathSheet = loadImage(reaper + "death.png");
 const potionImg = loadImage("Assets/potion.png");
 
+const weaponTiers = [
+  {
+    name: "Rusted Scythe",
+    icon: "Assets/weapons/scythe-base.svg",
+    damage: 1,
+    range: 110,
+    cooldown: 55,
+    knockback: 8,
+    blade: "#dfe8f4",
+    glow: "rgba(200, 215, 235, 0.5)",
+    desc: "The blade you woke up with.",
+  },
+  {
+    name: "Blood Scythe",
+    icon: "Assets/weapons/scythe-blood.svg",
+    damage: 2,
+    range: 126,
+    cooldown: 46,
+    knockback: 11,
+    blade: "#ff6b76",
+    glow: "rgba(235, 60, 75, 0.55)",
+    desc: "+1 damage \u00b7 longer reach \u00b7 faster swings",
+  },
+  {
+    name: "Soul Reaper",
+    icon: "Assets/weapons/scythe-soul.svg",
+    damage: 3,
+    range: 142,
+    cooldown: 38,
+    knockback: 14,
+    blade: "#7dffe0",
+    glow: "rgba(80, 255, 205, 0.55)",
+    desc: "+1 damage \u00b7 wider reach \u00b7 faster swings",
+  },
+  {
+    name: "Pumpkin King",
+    icon: "Assets/weapons/scythe-pumpkin.svg",
+    damage: 4,
+    range: 160,
+    cooldown: 30,
+    knockback: 18,
+    blade: "#ffb347",
+    glow: "rgba(255, 150, 50, 0.65)",
+    desc: "+1 damage \u00b7 max reach \u00b7 fastest swings",
+  },
+];
+
+const UPGRADE_POINTS = [100, 200, 300];
+const POINTS_PER_KILL = 10;
+
+for (const tier of weaponTiers) loadImage(tier.icon);
+
+
 const slashSound = new Audio("Assets/slash.mp3");
 
 
@@ -65,6 +118,10 @@ const player = {
 let enemies = [];
 let keys = {};
 let kills = 0;
+let points = 0;
+let weaponTier = 0;
+let upgradeFlash = 0;
+let upgradeToastTimeout = null;
 let tick = 0;
 let spawnTimer = 0;
 let attackTimer = 0;
@@ -83,6 +140,49 @@ window.addEventListener("keydown", (e) => {
 window.addEventListener("keyup", (e) => {
   keys[e.key.toLowerCase()] = false;
 });
+
+function updateWeaponHud() {
+  const tier = weaponTiers[weaponTier];
+  document.getElementById("points").textContent = points;
+  document.getElementById("weapon-icon").src = tier.icon;
+  document.getElementById("weapon-name").textContent = tier.name;
+  document.getElementById("weapon-level").textContent =
+    weaponTier === weaponTiers.length - 1 ? "MAX" : "Lv " + (weaponTier + 1);
+
+  const next = UPGRADE_POINTS[weaponTier];
+  const prev = weaponTier === 0 ? 0 : UPGRADE_POINTS[weaponTier - 1];
+  let progress = 100;
+  if (next !== undefined) progress = ((points - prev) / (next - prev)) * 100;
+
+  document.getElementById("weapon-progress-fill").style.width =
+    Math.max(0, Math.min(100, progress)) + "%";
+}
+
+function showUpgradeToast(tier) {
+  const toast = document.getElementById("upgrade-toast");
+  document.getElementById("upgrade-icon").src = tier.icon;
+  document.getElementById("upgrade-name").textContent = tier.name;
+  document.getElementById("upgrade-desc").textContent = tier.desc;
+  toast.classList.add("show");
+
+  clearTimeout(upgradeToastTimeout);
+  upgradeToastTimeout = setTimeout(() => toast.classList.remove("show"), 2600);
+}
+
+function checkWeaponUpgrade() {
+  let upgraded = false;
+  while (weaponTier < weaponTiers.length - 1 && points >= UPGRADE_POINTS[weaponTier]) {
+    weaponTier++;
+    upgraded = true;
+    showUpgradeToast(weaponTiers[weaponTier]);
+  }
+
+  if (upgraded) {
+    upgradeFlash = 60;
+    updateWeaponHud();
+  }
+}
+
 
 function spawnEnemy() {
   const type = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
@@ -109,6 +209,8 @@ function update() {
     if (tick % 6 == 0 && deathFrame < 17) deathFrame++;
     return;
   }
+
+  const weapon = weaponTiers[weaponTier];
 
   if (keys["w"] || keys["arrowup"]) player.y -= player.speed;
   if (keys["s"] || keys["arrowdown"]) player.y += player.speed;
@@ -137,13 +239,13 @@ function update() {
 
   let enemyNearby = false;
   for (let enemy of enemies) {
-    if (Math.hypot(enemy.x - player.x, enemy.y - player.y) < 110) {
+    if (Math.hypot(enemy.x - player.x, enemy.y - player.y) < weapon.range) {
       enemyNearby = true;
     }
   }
 
   attackTimer++;
-  if (attackTimer > 50 && enemyNearby && !player.attacking) {
+  if (attackTimer > weapon.cooldown && enemyNearby && !player.attacking) {
     player.attacking = true;
     player.frame = 0;
     attackTimer = 0;
@@ -156,16 +258,18 @@ function update() {
 
     for (let enemy of enemies) {
       const dist = Math.hypot(enemy.x - player.x, enemy.y - player.y);
-      if (dist < 110) {
-        enemy.hp--;
+      if (dist < weapon.range) {
+        enemy.hp -= weapon.damage;
         enemy.hitTimer = 10;
-        enemy.pushX = (enemy.x - player.x) / dist * 8;
-        enemy.pushY = (enemy.y - player.y) / dist * 8;
+        const push = dist || 1;
+        enemy.pushX = (enemy.x - player.x) / push * weapon.knockback;
+        enemy.pushY = (enemy.y - player.y) / push * weapon.knockback;
       }
     }
   }
 
-  if (tick % 5 == 0) {
+  const animRate = player.attacking ? Math.max(2, Math.round(weapon.cooldown / 13)) : 5;
+  if (tick % animRate == 0) {
     player.frame++;
     if (player.attacking && player.frame >= 13) {
       player.attacking = false;
@@ -210,7 +314,13 @@ function update() {
 
   const before = enemies.length;
   enemies = enemies.filter((enemy) => enemy.hp > 0);
-  kills += before - enemies.length;
+  const killed = before - enemies.length;
+  if (killed > 0) {
+    kills += killed;
+    points += killed * POINTS_PER_KILL;
+    checkWeaponUpgrade();
+    updateWeaponHud();
+  }
 
   if (player.hp <= 0) {
     player.hp = 0;
@@ -218,9 +328,11 @@ function update() {
     document.getElementById("gameover").style.display = "block";
     document.getElementById("final-time").textContent = Math.floor(tick / 60);
     document.getElementById("final-kills").textContent = kills;
+    document.getElementById("final-points").textContent = points;
   }
 
   if (hurtTimer > 0) hurtTimer--;
+  if (upgradeFlash > 0) upgradeFlash--;
   if (tick == 300) document.querySelector(".hint").style.opacity = 0;
 
   document.getElementById("hp-fill").style.width = player.hp + "%";
@@ -252,6 +364,18 @@ function drawPlayer() {
   ctx.save();
   ctx.translate(player.x, player.y);
 
+  if (weaponTier > 0 && !dead) {
+    const tier = weaponTiers[weaponTier];
+    ctx.save();
+    ctx.globalAlpha = 0.35 + Math.sin(tick * 0.12) * 0.15;
+    ctx.strokeStyle = tier.glow;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.ellipse(0, 26, 31, 8, 0, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+  }
+
   ctx.fillStyle = "rgba(0, 0, 0, 0.35)";
   ctx.beginPath();
   ctx.ellipse(0, 28, 22, 6, 0, 0, Math.PI * 2);
@@ -259,6 +383,31 @@ function drawPlayer() {
 
   if (player.facingLeft) ctx.scale(-1, 1);
   ctx.drawImage(sheet, sx, sy, 100, 100, -75, -85, 150, 150);
+  ctx.restore();
+}
+
+function drawSlash() {
+  if (!player.attacking || dead) return;
+
+  const weapon = weaponTiers[weaponTier];
+  const progress = Math.min(1, player.frame / 13);
+  const radius = 38 + progress * (weapon.range - 38);
+  const sweep = Math.PI * 1.15;
+  const start = player.facingLeft ? Math.PI - sweep / 2 : -sweep / 2;
+
+  ctx.save();
+  ctx.globalCompositeOperation = "lighter";
+  ctx.lineCap = "round";
+  ctx.strokeStyle = weapon.blade;
+  ctx.globalAlpha = (1 - progress) * 0.9;
+  ctx.lineWidth = 9 - progress * 6;
+  ctx.beginPath();
+  ctx.arc(player.x, player.y - 4, radius, start, start + sweep);
+  ctx.stroke();
+
+  ctx.globalAlpha *= 0.35;
+  ctx.lineWidth *= 2.4;
+  ctx.stroke();
   ctx.restore();
 }
 
@@ -326,12 +475,32 @@ function draw() {
     if (enemy.y >= player.y) drawEnemy(enemy);
   }
 
+  drawSlash();
+
 
   const glow = ctx.createRadialGradient(player.x, player.y, 0, player.x, player.y, 200);
   glow.addColorStop(0, "rgba(255, 170, 80, 0.15)");
   glow.addColorStop(1, "rgba(255, 170, 80, 0)");
   ctx.fillStyle = glow;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  if (upgradeFlash > 0) {
+    const weapon = weaponTiers[weaponTier];
+    const progress = 1 - upgradeFlash / 60;
+    ctx.save();
+    ctx.globalCompositeOperation = "lighter";
+    ctx.globalAlpha = (1 - progress) * 0.85;
+    ctx.strokeStyle = weapon.blade;
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.arc(player.x, player.y, 30 + progress * 280, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.globalAlpha = (1 - progress) * 0.1;
+    ctx.fillStyle = weapon.blade;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.restore();
+  }
 
 
   let size = 1;
@@ -361,4 +530,5 @@ function loop() {
   requestAnimationFrame(loop);
 }
 
+updateWeaponHud();
 loop();

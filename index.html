@@ -15,14 +15,34 @@
 
   <div class="hud">
     <div class="hp-bar"><div id="hp-fill"></div></div>
-    <div class="kills">&#9760; <span id="kills">0</span></div>
+    <div class="stats">
+      <div class="kills">&#9760; <span id="kills">0</span></div>
+      <div class="points"><span id="points">0</span> pts</div>
+    </div>
+    <div class="weapon">
+      <img id="weapon-icon" src="Assets/weapons/scythe-base.svg" alt="">
+      <div class="weapon-text">
+        <div class="weapon-line">
+          <span id="weapon-name">Rusted Scythe</span>
+          <span id="weapon-level">Lv 1</span>
+        </div>
+        <div class="weapon-progress"><div id="weapon-progress-fill"></div></div>
+      </div>
+    </div>
   </div>
   <div class="time" id="time">0:00</div>
-  <div class="hint">WASD to move</div>
+  <div class="hint">WASD to move &middot; 100 pts upgrades your scythe</div>
+
+  <div class="upgrade-toast" id="upgrade-toast">
+    <div class="upgrade-label">weapon upgraded</div>
+    <img class="upgrade-icon" id="upgrade-icon" src="Assets/weapons/scythe-blood.svg" alt="">
+    <div class="upgrade-name" id="upgrade-name">Blood Scythe</div>
+    <div class="upgrade-desc" id="upgrade-desc">+1 damage &middot; longer reach</div>
+  </div>
 
   <div class="gameover" id="gameover">
     <h1>you died</h1>
-    <p>survived <span id="final-time">0</span>s &middot; <span id="final-kills">0</span> kills</p>
+    <p>survived <span id="final-time">0</span>s &middot; <span id="final-kills">0</span> kills &middot; <span id="final-points">0</span> pts</p>
     <p class="restart">press R to try again</p>
   </div>
 
