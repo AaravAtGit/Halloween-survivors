@@ -53,7 +53,7 @@ The final screen shows how long you survived and how many enemies you killed. Pr
 You need Python 3 or any other static file server. Clone the repository and start the server from the project folder:
 
 ```bash
-git clone https://github.com/Nitikpsn/Halloween-survivors.git
+git https://github.com/AaravAtGit/Halloween-survivors/
 cd Halloween-survivors
 python3 -m http.server 8000
 ```
